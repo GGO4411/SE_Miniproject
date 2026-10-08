@@ -4,7 +4,9 @@ const cors = require("cors");
 
 const sequelize = require("./config/db");
 require("./models/User"); // ensures the model is registered before sync()
+require("./models/Event"); // Event Management model
 const authRoutes = require("./routes/authRoutes");
+const eventRoutes = require("./routes/eventRoutes");
 const exampleProtectedRoutes = require("./routes/exampleProtectedRoutes");
 const { notFoundHandler, errorHandler } = require("./middleware/errorHandler");
 
@@ -16,6 +18,7 @@ app.use(express.json());
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/events", eventRoutes);
 // Members 2-4: mount your own routers here, e.g.
 // app.use("/api/events", eventRoutes);
 // app.use("/api/registrations", registrationRoutes);
