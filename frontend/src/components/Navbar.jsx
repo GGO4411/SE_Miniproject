@@ -1,28 +1,76 @@
-import { Link, useNavigate } from "react-router-dom";
+
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
+
+  const isOrganizer =
+    user?.role === "ORGANIZER" || user?.role === "ADMIN";
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
+
+  const navLinkClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
 
   return (
     <header className="navbar">
-      <Link to="/" className="brand">Event Management System</Link>
-      <nav>
-        {user ? (
+      <Link to="/" className="brand">
+        Event Management System
+      </Link>
+
+      <nav className="nav-links" aria-label="Main navigation">
+        <NavLink to="/events" className={navLinkClass}>
+          Explore Events
+        </NavLink>
+
+        {!loading && user && (
           <>
-            <Link to="/dashboard">Dashboard</Link>
-            <button onClick={handleLogout}>Logout</button>
+            <NavLink to="/dashboard" className={navLinkClass}>
+              Dashboard
+            </NavLink>
+
+            {isOrganizer && (
+              <>
+                <NavLink
+                  to="/manage-events"
+                  className={navLinkClass}
+                >
+                  Manage Events
+                </NavLink>
+
+                <NavLink
+                  to="/events/create"
+                  className={navLinkClass}
+                >
+                  Create Event
+                </NavLink>
+              </>
+            )}
+
+            <button
+              type="button"
+              className="nav-logout"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </>
-        ) : (
+        )}
+
+        {!loading && !user && (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Sign Up</Link>
+            <NavLink to="/login" className={navLinkClass}>
+              Login
+            </NavLink>
+
+            <NavLink to="/register" className={navLinkClass}>
+              Sign Up
+            </NavLink>
           </>
         )}
       </nav>
