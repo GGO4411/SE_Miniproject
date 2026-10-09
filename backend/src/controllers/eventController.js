@@ -182,6 +182,20 @@ async function createEvent(req, res, next) {
       publishing: normalizedStatus === "PUBLISHED",
     });
 
+    for (const field of ["title", "category", "venue"]) {
+      if (
+        eventData[field] === undefined ||
+        eventData[field] === null ||
+        !String(eventData[field]).trim()
+      ) {
+        throw new ApiError(
+          400,
+          "MISSING_REQUIRED_FIELD",
+          `${field} is required when creating an event`
+        );
+      }
+    }
+
     const event = await Event.create({
       ...eventData,
       title: String(title).trim(),
