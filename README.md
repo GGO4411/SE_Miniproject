@@ -25,7 +25,7 @@ plugs into the patterns established here.
 - A React frontend: Register page, Login page, a protected Dashboard page,
   and an `AuthContext` that the rest of the team can reuse
 
-## Project Structure
+## The Project Structure
 
 ```
 event-management-system/
